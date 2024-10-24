@@ -17,10 +17,11 @@ def rtsp_receiver(url):
             q.put(frame)
     vc.release()
 
-def frame_processor(descr, out_dir, fps = 15, interval = 30):
+def frame_processor(descr, out_dir, fps = 15, interval = 60):
     out = 0
     counter = -1
     last_time = 0.0
+    start_time = 0.0
     while True:
         if not q.empty():
             frame = q.get()
@@ -30,15 +31,17 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
                 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
                 out = cv2.VideoWriter(filename, fourcc, fps, dimensions(frame))
                 counter = 0
-            if dt - last_time >= 1 / fps:
+                start_time = dt
+            if dt - last_time > 1 / fps:
                 last_time = dt
                 out.write(resize(frame))
                 counter += 1
-                print("frames done: " + str(counter) + "/" + str(fps * interval))
+                print("frames done: " + str(counter) + "/" + str(fps * interval) + " " + str(dt - start_time) + "s")
                 print("queue size: " + str(q.qsize()))
             if counter >= fps * interval:
                 out.release()
                 counter = -1
+                start_time = 0
 
 def cleaner(out_dir, max_size = 24990):
     while True:
