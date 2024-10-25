@@ -27,7 +27,7 @@ def rtsp_receiver(url):
 def frame_processor(descr, out_dir, fps = 15, interval = 30):
     out = 0
     counter = -1
-    last_time = 0.0
+    last_time = time.time()
     start_time = 0.0
     filename = None
     tmp = None
