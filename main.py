@@ -32,6 +32,8 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
     filename = None
     tmp = None
     while True:
+        if time.time() - dt > 30:
+            break
         if not q.empty():
             frame = q.get()
             dt = time.time()
@@ -51,6 +53,8 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
             if counter >= fps * interval:
                 out.release()
                 tmp.close()
+                t3 = Thread(target=cleaner, args=(out_dir,))
+                t3.start()
                 t4 = Thread(target=move, args=(tmp.name, filename))
                 t4.start()
                 counter = -1
@@ -68,8 +72,6 @@ def main(url, descr, out_dir):
     t1.start()
     t2 = Thread(target=frame_processor, args=(descr, out_dir))
     t2.start()
-    t3 = Thread(target=cleaner, args=(out_dir,))
-    t3.start()
 
 size_args = len(sys.argv)
 
