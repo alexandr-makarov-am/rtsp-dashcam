@@ -58,6 +58,7 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
                 counter = -1
                 start_time = 0
         if time.time() - last_time > 30:
+            print("frame processor exited.")
             break
 
 def cleaner(out_dir, max_size = 24990):
