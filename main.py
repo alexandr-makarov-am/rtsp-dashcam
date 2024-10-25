@@ -6,6 +6,7 @@ import sys
 import os
 import time
 import tempfile
+import signal
 from threading import Thread
 from datetime import datetime
 from utils import dimensions, resize, get_dir_size, get_oldest_file
@@ -59,7 +60,7 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
                 start_time = 0
         if time.time() - last_time > 30:
             print("frame processor exiting...")
-            sys.exit(0)
+            os.kill(os.getpid(), signal.SIGINT)
 
 def cleaner(out_dir, max_size = 24990):
     while True:
