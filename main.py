@@ -32,8 +32,6 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
     filename = None
     tmp = None
     while True:
-        if time.time() - last_time > 30:
-            break
         if not q.empty():
             frame = q.get()
             dt = time.time()
@@ -59,6 +57,8 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
                 t4.start()
                 counter = -1
                 start_time = 0
+        if time.time() - last_time > 30:
+            break
 
 def cleaner(out_dir, max_size = 24990):
     while True:
