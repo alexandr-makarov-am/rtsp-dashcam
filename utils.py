@@ -17,8 +17,8 @@ def get_oldest_file(dir = '.'):
     return sorted(list_of_files, key=os.path.getctime)[0]
 
 def dimensions(frame, width = 1440):
-    height = int(frame.shape[0] * (width/frame.shape[1]))
-    return width, height
+    # height = int(frame.shape[0] * (width/frame.shape[1]))
+    return frame.shape[1], frame.shape[0]
 
 def resize(frame_input):
     dim = dimensions(frame_input)

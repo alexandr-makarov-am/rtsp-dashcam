@@ -17,7 +17,7 @@ def rtsp_receiver(url):
             q.put(frame)
     vc.release()
 
-def frame_processor(descr, out_dir, fps = 15, interval = 60):
+def frame_processor(descr, out_dir, fps = 15, interval = 30):
     out = 0
     counter = -1
     last_time = 0.0
@@ -34,7 +34,7 @@ def frame_processor(descr, out_dir, fps = 15, interval = 60):
                 start_time = dt
             if dt - last_time > 1 / fps:
                 last_time = dt
-                out.write(resize(frame))
+                out.write(frame)
                 counter += 1
                 print("frames done: " + str(counter) + "/" + str(fps * interval) + " " + str(dt - start_time) + "s")
                 print("queue size: " + str(q.qsize()))
