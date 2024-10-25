@@ -32,7 +32,7 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
     filename = None
     tmp = None
     while True:
-        if time.time() - dt > 30:
+        if time.time() - last_time > 30:
             break
         if not q.empty():
             frame = q.get()
