@@ -1,13 +1,20 @@
+import shutil
+
 import cv2
 import queue
 import sys
 import os
 import time
+import tempfile
 from threading import Thread
 from datetime import datetime
 from utils import dimensions, resize, get_dir_size, get_oldest_file
 
 q = queue.Queue()
+
+def move(fr, to):
+    shutil.move(fr, to)
+    print('file saved to ' + to)
 
 def rtsp_receiver(url):
     vc = cv2.VideoCapture(url)
@@ -22,6 +29,8 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
     counter = -1
     last_time = 0.0
     start_time = 0.0
+    filename = None
+    tmp = None
     while True:
         if not q.empty():
             frame = q.get()
@@ -29,7 +38,8 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
             if counter == -1:
                 filename = os.path.join(out_dir, descr + "_" + str(datetime.now().strftime("%Y%m%d_%H%M%S")) + ".mp4")
                 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-                out = cv2.VideoWriter(filename, fourcc, fps, dimensions(frame))
+                tmp = tempfile.NamedTemporaryFile(suffix='.mp4', delete=False)
+                out = cv2.VideoWriter(tmp.name, fourcc, fps, dimensions(frame))
                 counter = 0
                 start_time = dt
             if dt - last_time > 1 / fps:
@@ -40,6 +50,9 @@ def frame_processor(descr, out_dir, fps = 15, interval = 30):
                 print("queue size: " + str(q.qsize()))
             if counter >= fps * interval:
                 out.release()
+                tmp.close()
+                t4 = Thread(target=move, args=(tmp.name, filename))
+                t4.start()
                 counter = -1
                 start_time = 0
 
