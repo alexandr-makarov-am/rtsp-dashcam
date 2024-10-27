@@ -8,7 +8,7 @@ from threading import Thread
 from utils import dimensions, move, cleaner
 
 class RTSPDashCam:
-    def __init__(self, url, out_dir, index, fps = 15, interval = 10, lifetime = 1, max_dir_size = 128):
+    def __init__(self, url, out_dir, index, fps = 15, interval = 10, lifetime = 1, max_dir_size = 6016):
         self.q = queue.Queue()
         self.url = url
         self.out_dir = out_dir
