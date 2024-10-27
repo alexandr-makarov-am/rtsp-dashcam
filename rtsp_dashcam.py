@@ -10,7 +10,6 @@ from utils import dimensions, move, cleaner
 class RTSPDashCam:
     def __init__(self, url, out_dir, index, fps = 15, interval = 10, lifetime = 1, max_dir_size = 128):
         self.q = queue.Queue()
-        self.lifespan = time.time()
         self.url = url
         self.out_dir = out_dir
         self.id = index
@@ -22,6 +21,7 @@ class RTSPDashCam:
     def __stream(self):
         self.vc = cv2.VideoCapture(self.url)
         print("init __stream")
+        self.lifespan = time.time()
         while self.vc.isOpened():
             ret, frame = self.vc.read()
             if ret:

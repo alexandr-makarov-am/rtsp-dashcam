@@ -9,7 +9,7 @@ process_list = []
 def process(url, out_dir, index):
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
-    t = RTSPDashCam(url, out_dir, index, 15 ,30, 1)
+    t = RTSPDashCam(url, out_dir, index, 15 ,60, 30)
     t.start()
 
 if __name__ == '__main__':
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     while True:
         for i, prc in enumerate(process_list):
             key = i + 2
-            if prc is None:
+            if prc is None or not prc.is_alive():
                 prc = Process(target=process, args=(sys.argv[key], os.path.join(out_dir, str(key)), i + 1))
                 prc.start()
                 process_list[i] = prc
